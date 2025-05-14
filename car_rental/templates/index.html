@@ -1,0 +1,224 @@
+{% extends 'base.html' %} {% load static %}
+<!--  -->
+{% block title %}Car Rental - Home{% endblock %} {% block css %}
+<style>
+  .hero {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+      url("https://images.unsplash.com/photo-1485291571150-772bcfc10da5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80");
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .hero-content {
+    max-width: 800px;
+    padding: 20px;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .cta-button:hover {
+    background-color: #2980b9;
+  }
+
+  .featured-cars {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+  }
+
+  .featured-cars:before {
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #3498db, transparent);
+  }
+
+  .decorative-car {
+    position: absolute;
+    top: -50px;
+    right: 50px;
+    width: 100px;
+    height: 100px;
+    background-image: url("https://www.svgrepo.com/show/416535/automobile-car-transport.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.7;
+  }
+
+  .featured-cars h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+  }
+
+  .car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .car-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+
+  .car-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .car-image {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .car-info {
+    padding: 1.5rem;
+    display: block;
+  }
+
+  .car-title {
+    margin: 0 0 0.5rem;
+    color: #2c3e50;
+  }
+
+  .car-price {
+    color: #3498db;
+    font-weight: bold;
+  }
+
+  .car-details {
+    margin: 1rem 0;
+    color: #666;
+    display: block;
+  }
+
+  .book-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #3498db;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+
+  .book-button:hover {
+    background: #2980b9;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="hero">
+  <div class="hero-content">
+    <h1>Drive Your Way</h1>
+    <p>
+      Experience the freedom of the road with our premium car rental service. We
+      offer a wide range of vehicles to suit your needs and budget.
+    </p>
+    {% if user.is_authenticated %}
+    <a href="{% url 'car_list' %}" class="cta-button">Browse Cars</a>
+    {% else %}
+    <a href="{% url 'login' %}" class="cta-button">Login to Browse Cars</a>
+    <p style="margin-top: 15px; font-size: 0.9rem">
+      Don't have an account?
+      <a href="{% url 'register' %}" style="color: #3498db">Register here</a>
+    </p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="featured-cars">
+  <div class="decorative-car"></div>
+  <h2>Featured Cars</h2>
+
+  {% if user.is_authenticated %}
+  <div class="car-grid">
+    {% for car in cars %}
+    <div class="car-card">
+      <div
+        class="car-image"
+        style="background-image: url('{{ car.image_url }}');"
+      ></div>
+      <div class="car-info">
+        <h3 class="car-title">
+          {{ car.make }} {{ car.model }} ({{ car.year }})
+        </h3>
+        <p class="car-price">${{ car.price_per_day }} / day</p>
+        <div class="car-details">
+          {% if car.transmission_type == 'MANUAL' %}
+          <p>Transmission: Manual</p>
+          {% else %}
+          <p>Transmission: Automatic</p>
+          {% endif %}
+        </div>
+        <a href="{% url 'car_detail' car.id %}" class="book-button"
+          >View Details</a
+        >
+      </div>
+    </div>
+    {% empty %}
+    <p>No cars available at the moment. Please check back later.</p>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div
+    style="
+      text-align: center;
+      padding: 30px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    "
+  >
+    <h3 style="color: #2c3e50; margin-bottom: 15px">
+      Please Log In to View Our Car Selection
+    </h3>
+    <p style="color: #666; margin-bottom: 20px">
+      To browse our available cars and make bookings, you need to be logged in.
+      This helps us provide personalized service and secure bookings.
+    </p>
+    <a href="{% url 'login' %}" class="cta-button">Login Now</a>
+    <p style="margin-top: 15px; font-size: 0.9rem">
+      Don't have an account?
+      <a href="{% url 'register' %}" style="color: #3498db">Register here</a>
+    </p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

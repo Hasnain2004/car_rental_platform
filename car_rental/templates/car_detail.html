@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% load static %}
+<!-- title -->
+{% block title %}{{ car.make }} {{ car.model }} - Car Rental{% endblock %}
+<!-- css -->
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/car_detail.css' %}" />
+{% endblock %} {% block content %}
+<div class="car-detail-container">
+  <div class="car-detail-grid">
+    <div
+      class="car-detail-image"
+      style="background-image: url('{{ car.image_url }}');"
+    ></div>
+    <div class="car-detail-info">
+      <h1>{{ car.make }} {{ car.model }} ({{ car.year }})</h1>
+      <p class="car-price">${{ car.price_per_day }} / day</p>
+
+      <div class="car-specs">
+        <h3>Vehicle Details</h3>
+        <ul class="specs-list">
+          <li><strong>Make:</strong> {{ car.make }}</li>
+          <li><strong>Model:</strong> {{ car.model }}</li>
+          <li><strong>Year:</strong> {{ car.year }}</li>
+          <li>
+            <strong>Transmission:</strong>
+            <!-- if car.transmission_type == 'MANUAL' -->
+            {% if car.transmission_type == 'MANUAL' %}Manual{% else %} Automatic
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+
+      {% if car.availability %}
+      <a href="{% url 'create_booking' car.id %}" class="book-now-btn"
+        >Book Now</a
+      >
+      {% else %}
+      <p>This car is currently not available for booking.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <a href="{% url 'car_list' %}" class="back-link">← Back to cars</a>
+</div>
+{% endblock %}

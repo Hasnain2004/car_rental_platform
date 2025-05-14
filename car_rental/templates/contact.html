@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% load static %}
+<!-- title -->
+{% block title %}Contact Us - Car Rental{% endblock %}
+<!-- css -->
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}" />
+{% endblock %}
+<!-- content -->
+{% block content %}
+<div class="contact-container">
+  <h1>Contact Us</h1>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h3>Get in Touch</h3>
+      <div class="contact-info-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <p>123 Car Street, Auto City, AC 12345</p>
+      </div>
+      <div class="contact-info-item">
+        <i class="fas fa-phone"></i>
+        <p>+1 234 567 8900</p>
+      </div>
+      <div class="contact-info-item">
+        <i class="fas fa-envelope"></i>
+        <p>info@carrentalsystem.com</p>
+      </div>
+      <div class="contact-info-item">
+        <i class="fas fa-clock"></i>
+        <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
+      </div>
+    </div>
+
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

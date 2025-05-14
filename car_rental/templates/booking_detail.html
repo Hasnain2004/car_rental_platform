@@ -1,0 +1,236 @@
+{% extends 'base.html' %} {% load static %}
+<!-- title -->
+{% block title %}Booking #{{ booking.id }} - Car Rental{% endblock %}
+<!-- css -->
+{% block css %}
+<style>
+  .booking-detail-container {
+    max-width: 800px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+  }
+
+  .booking-detail-container h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+
+  .booking-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .booking-detail-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .car-info,
+  .booking-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .section-title {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.75rem;
+  }
+
+  .car-image {
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+
+  .detail-label {
+    font-weight: bold;
+    color: #555;
+  }
+
+  .detail-value {
+    color: #333;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .status-pending {
+    background-color: #f39c12;
+  }
+
+  .status-confirmed {
+    background-color: #2ecc71;
+  }
+
+  .status-completed {
+    background-color: #3498db;
+  }
+
+  .status-cancelled {
+    background-color: #e74c3c;
+  }
+
+  .total-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #3498db;
+    margin-top: 1rem;
+    text-align: right;
+  }
+
+  .actions-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+
+  .action-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .back-button {
+    background: #f1f1f1;
+    color: #333;
+  }
+
+  .back-button:hover {
+    background: #e0e0e0;
+  }
+
+  .cancel-button {
+    background: #e74c3c;
+    color: white;
+  }
+
+  .cancel-button:hover {
+    background: #c0392b;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="booking-detail-container">
+  <h1>Booking Details</h1>
+
+  <div class="booking-detail-grid">
+    <div class="car-info">
+      <h2 class="section-title">Car Information</h2>
+      <div
+        class="car-image"
+        style="
+          background-image: url('{% if booking.car.image_url %}{{ booking.car.image_url }}{% else %}https://th.bing.com/th/id/R.c33768fe42791b045951429e0502701a?rik=Os5%2fNGBq8DeSgw&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f06%2fCar-desktop-backgrounds-car-wallpapers-car-hd-photo.jpg&ehk=QhMJa%2bXR7ppHcBMx0gOMEXaZCCSYCneetAeXVsfTaPc%3d&risl=&pid=ImgRaw&r=0{% endif %}');
+        "
+      ></div>
+
+      <div class="detail-row">
+        <span class="detail-label">Make & Model</span>
+        <span class="detail-value"
+          >{{ booking.car.make }} {{ booking.car.model }}</span
+        >
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Year</span>
+        <span class="detail-value">{{ booking.car.year }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Transmission</span>
+        <span class="detail-value">
+          {% if booking.car.transmission_type == 'AUTOMATIC' %}Automatic
+          <!-- g -->
+          {% elif booking.car.transmission_type == 'MANUAL' %}Manual{% else %}
+          <!-- default -->
+          {{ booking.car.transmission_type }}{% endif %}
+        </span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Price Per Day</span>
+        <span class="detail-value">${{ booking.car.price_per_day }}</span>
+      </div>
+    </div>
+
+    <div class="booking-info">
+      <h2 class="section-title">Booking Information</h2>
+
+      <div class="detail-row">
+        <span class="detail-label">Booking ID</span>
+        <span class="detail-value">#{{ booking.id }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Status</span>
+        <span class="detail-value">
+          <span class="status-badge status-{{ booking.status|lower }}">
+            {{ booking.get_status_display }}
+          </span>
+        </span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Start Date</span>
+        <span class="detail-value">{{ booking.start_date|date:"F d, Y" }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">End Date</span>
+        <span class="detail-value">{{ booking.end_date|date:"F d, Y" }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Duration</span>
+        <span class="detail-value">
+          {{ duration }} day{{ duration|pluralize }}
+        </span>
+      </div>
+
+      <div class="total-price">Total: ${{ booking.total_price }}</div>
+    </div>
+  </div>
+
+  <div class="actions-section">
+    <a href="{% url 'booking_list' %}" class="action-button back-button"
+      >Back to Bookings</a
+    >
+    {% if booking.status == 'PENDING' or booking.status == 'CONFIRMED' %}
+    <a
+      href="{% url 'cancel_booking' booking.id %}"
+      class="action-button cancel-button"
+      >Cancel Booking</a
+    >
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

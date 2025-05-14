@@ -1,0 +1,81 @@
+{% extends 'base.html' %} {% load static %}
+<!-- title -->
+{% block title %}Available Cars - Car Rental{% endblock %}
+<!-- css -->
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cars.css' %}" />
+{% endblock %}
+<!-- content -->
+{% block content %}
+<div class="cars-container">
+  <h1>Available Cars</h1>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search for make, model, year..."
+    />
+  </div>
+
+  <div class="car-grid" id="carGrid">
+    {% for car in cars %}
+    <div class="car-card">
+      <div
+        class="car-image"
+        style="background-image: url('{{ car.image_url }}');"
+      ></div>
+      <div class="car-info">
+        <h3 class="car-title">
+          {{ car.make }} {{ car.model }} ({{ car.year }})
+        </h3>
+        <p class="car-price">${{ car.price_per_day }} / day</p>
+        <div class="car-details">
+          {% if car.transmission_type == 'MANUAL' %}
+          <p>Transmission: Manual</p>
+          {% else %}
+          <p>Transmission: Automatic</p>
+          {% endif %}
+        </div>
+        <div class="button-container">
+          <a href="{% url 'car_detail' car.id %}" class="view-button"
+            >View Details</a
+          >
+          <a href="{% url 'create_booking' car.id %}" class="book-button"
+            >Book Now</a
+          >
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="no-cars">
+      <p>No cars available at the moment. Please check back later.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const carGrid = document.getElementById("carGrid");
+    const carCards = carGrid.querySelectorAll(".car-card");
+
+    searchInput.addEventListener("input", function () {
+      const searchTerm = this.value.toLowerCase();
+
+      carCards.forEach((card) => {
+        const title = card
+          .querySelector(".car-title")
+          .textContent.toLowerCase();
+
+        if (title.includes(searchTerm)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

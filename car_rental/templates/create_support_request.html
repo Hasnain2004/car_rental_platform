@@ -1,0 +1,123 @@
+{% extends 'base.html' %} {% load static %}
+<!-- title -->
+{% block title %}Create Support Request - Car Rental{% endblock %}
+<!-- css -->
+{% block css%}
+<style>
+  .support-container {
+    max-width: 600px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+  }
+
+  .support-container h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+  }
+
+  .support-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .support-form h3 {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+  }
+
+  .support-form form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
+
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-height: 150px;
+  }
+
+  .support-form button {
+    width: 100%;
+    padding: 12px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .support-form button:hover {
+    background: #2980b9;
+  }
+
+  .errorlist {
+    color: #e74c3c;
+    list-style-type: none;
+    padding: 0;
+    margin: 5px 0 10px;
+    font-size: 0.9rem;
+  }
+
+  .back-button {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    color: #3498db;
+    text-decoration: none;
+  }
+
+  .back-button:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="support-container">
+  <h1>Support Request</h1>
+
+  <div class="support-form">
+    <h3>Submit Your Query</h3>
+    <form method="post">
+      {% csrf_token %} {% if form.non_field_errors %}
+      <ul class="errorlist">
+        {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <div class="form-group">
+        <label for="{{ form.message.id_for_label }}">Message:</label>
+        {{ form.message }} {% if form.message.errors %}
+        <ul class="errorlist">
+          {% for error in form.message.errors %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+
+      <button type="submit">Submit Request</button>
+    </form>
+    <a href="{% url 'index' %}" class="back-button">Back to Home</a>
+  </div>
+</div>
+{% endblock %}

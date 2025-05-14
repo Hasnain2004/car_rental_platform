@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% load static %}
+<!-- title -->
+{% block title %}Dashboard - Car Rental{% endblock %} {% block css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+{% endblock %} {% block content %}
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Welcome, {{ user.username }}</h1>
+    <p>Manage your bookings and support requests from here.</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="dashboard-section">
+      <h2>Your Bookings</h2>
+      {% if bookings %} {% for booking in bookings %}
+      <div class="booking-item">
+        <h3>{{ booking.car.make }} {{ booking.car.model }}</h3>
+        <div class="booking-details">
+          <p>From: {{ booking.start_date }} - To: {{ booking.end_date }}</p>
+          <p>Total: ${{ booking.total_price }}</p>
+        </div>
+        <div class="booking-status status-{{ booking.status|lower }}">
+          {{ booking.get_status_display }}
+        </div>
+      </div>
+      {% endfor %}
+      <a href="{% url 'booking_list' %}" class="view-all">View All Bookings</a>
+      {% else %}
+      <p>You don't have any bookings yet.</p>
+      <a href="{% url 'car_list' %}" class="view-all">Browse Available Cars</a>
+      {% endif %}
+    </div>
+
+    <div class="dashboard-section">
+      <h2>Support Requests</h2>
+      {% if support_requests %} {% for request in support_requests %}
+      <div class="support-item">
+        <h3>Request #{{ request.id }}</h3>
+        <div class="support-details">
+          <p>{{ request.message|truncatechars:100 }}</p>
+          <p>Created on: {{ request.created_at|date:"M d, Y" }}</p>
+        </div>
+        <div class="support-status status-{{ request.status|lower|cut:' ' }}">
+          {{ request.get_status_display }}
+        </div>
+      </div>
+      {% endfor %} {% else %}
+      <p>You don't have any support requests yet.</p>
+      {% endif %}
+      <a href="{% url 'create_support_request' %}" class="view-all"
+        >Create New Support Request</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

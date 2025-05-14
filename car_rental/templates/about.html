@@ -1,0 +1,59 @@
+{% extends 'base.html' %} {% load static %}
+<!-- title -->
+{% block title %}About Us - Car Rental{% endblock %}
+<!-- css -->
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}" />
+{% endblock %}
+<!-- content -->
+{% block content %}
+<div class="about-container">
+  <h1>About Us</h1>
+
+  <div class="about-content">
+    <img
+      src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+      alt="Car Rental Service"
+      class="about-image"
+    />
+    <div class="about-text">
+      <h2>Welcome to Car Rental System</h2>
+      <p>
+        We are dedicated to providing the best car rental experience to our
+        customers. With years of experience in the industry, we pride ourselves
+        on our exceptional service and wide range of vehicles to suit every need
+        and budget.
+      </p>
+      <p>
+        Our mission is to make car rental simple, affordable, and hassle-free.
+        We maintain our vehicles to the highest standards and offer competitive
+        prices to ensure customer satisfaction.
+      </p>
+    </div>
+  </div>
+
+  <div class="about-features">
+    <div class="feature-card">
+      <i class="fas fa-car"></i>
+      <h3>Wide Selection</h3>
+      <p>
+        Choose from our extensive fleet of vehicles ranging from economy to
+        luxury.
+      </p>
+    </div>
+    <div class="feature-card">
+      <i class="fas fa-shield-alt"></i>
+      <h3>Safe & Reliable</h3>
+      <p>All our vehicles undergo regular maintenance and safety checks.</p>
+    </div>
+    <div class="feature-card">
+      <i class="fas fa-dollar-sign"></i>
+      <h3>Best Prices</h3>
+      <p>
+        Competitive rates and special offers for both short and long-term
+        rentals.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
